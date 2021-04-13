@@ -1,0 +1,355 @@
+---
+title: "Oxford R Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+## Basic R 
+
+Dear Students,
+
+Those not familiar with R and RStudio might benefit from the information below!
+
+R is a free statistical software that is used for all levels of statistical analysis and RStudio is a very useful interface for R. If you want to use R and Rstudio in your computer you should download the latest versions from the following website.
+
+https://www.rstudio.com/products/rstudio/download/
+ 
+and for R click here: 
+ 
+https://www.r-project.org/
+ 
+ 
+
+**R Capabilities**
+
+R can do a number of jobs ranging from simple algebraic calculations to advanced level simulations.
+
+Here is a simple example to see how R can be used to do simple calculations!
+
+### R as a calculator I
+
+Write the R code required to add two plus two:
+
+```{r two-plus-two, exercise=TRUE}
+
+```
+
+### R as a calculator II
+
+Can you find the answer for the following equation?
+
+$$(17+(6*2))/29$$:
+
+```{r with_brackets, exercise=TRUE}
+
+```
+
+### Understanding objects!
+
+In R most pieces of information are stored what we call **objects**. For example you can create an **object** that contains the information from the previous equation.
+
+$$(17+(6*2))/29$$
+
+
+By typing the name of the object (which can be given whatever name you think is suitable), you should be getting the result of the equation
+
+``` {r ,echo=T}
+object.eq <- (17+(6*2))/29
+object.eq
+```
+
+
+The content of an object does not need to be numeric; 
+
+
+``` {r,echo=T}
+
+
+one<-"I"
+two<-"love"
+three<- "Oxford"
+
+one 
+two
+three
+```
+
+We could make that look a bit better by typing cbind(one, two, three)!
+
+``` {r, echo=T}
+cbind(one, two, three)
+```
+
+
+Give it a go!
+
+Create an object that contains an equation that equals 5 (2+3, 1+4, 1*5, 10/2 etc). Feel free to call it whatever you want
+
+```{r with_brackets_one, exercise=TRUE}
+
+```
+
+
+
+Now, replicate what I did with the *I love Oxford* example above, but this time write My name is *yourname*
+
+```{r non-numeric, exercise=TRUE}
+
+```
+
+
+
+
+### Creating a data.frame
+
+For most of your work you will be analysing datasets created  by others. But R can also be used as an Excel file.
+
+For example, if you want to create to columns of data that contain information for 5 rows the following code should do the trick:
+
+
+```{r,echo=T}
+col.one<-c(4,8,16,20,21)
+col.two<-c(3,2,18,22,36)
+
+
+col.one
+col.two
+```
+With the following code you can put it together in a single data.frame called df (or whatever you think it should be called)
+
+```{r, echo=T}
+
+df<- as.data.frame(cbind(col.one, col.two))
+
+
+
+#You can print the data in your console
+print(df)
+df
+
+#If you are on RStudio you can double click the data in the Global Environment. A spreadsheet will open!
+```
+
+Say now you are interested in some summary information. What is the mean of these variables?
+
+```{r, echo=T}
+mean(df$col.one)
+
+##and check manually
+
+meanofcolone<-(4+8+16+20+21)/5
+meanofcolone
+```
+
+
+Where did the df$col.one come from? Well, when you are dealing with a data frame in R you need to tell it which variable to choose for the analysis. The above for example  tells R; go to the data frame called *df* and pick the variable/column *col.one*
+
+Can you do the same with *col.two*? No need to do the manual check!
+
+```{r col_two_ex, exercise=TRUE}
+
+```
+
+
+```{r col_two_ex-solution}
+
+mean(df$col.two)
+
+```
+
+There is a handy function in R that can give you additional information:
+
+```{r, echo=T}
+
+summary(df$col.two)
+```
+
+The *summary* command show you the min/max, the media and 25th and 75th percentile data point. If you need more information about your data, *var* and *sd* can be used to get the variance and the standard deviation of the variables!
+
+Now that you have a better understanding of how R operates let's try and find information that is not readily available. For example what is the value of col.one in the second row?
+
+```{r, echo=T}
+
+df[2,1]
+
+```
+
+For example what is the value of col.one in the second and third row?
+
+```{r, echo=T}
+
+df[c(2,3),1]
+
+```
+
+What if we are interested in the second column (and still second row)?
+```{r, echo=T}
+
+df[2,2]
+
+```
+You can check again to make sure you got this right:
+
+```{r, echo=T}
+
+df
+
+```
+
+
+The logic is fairly simple. For a data.frame *df* the brackets allow you to check specific dimensions. Within brackets the rows come first and then come the columns. In other words, df[1,2], will give you the first row of the second column. HINT: A good way to remember this is to think of [Ray, Charles] (or [Rows, Columns]).
+
+Try the following:
+
+What are the values in the 5th row of columns one and two?
+
+
+```{r col_two_two, exercise=TRUE}
+
+
+```
+
+
+```{r col_two_two-solution}
+df[5,c(1,2)]
+```
+
+
+## Relationships
+
+Let's start thinking about statistical relationships (without entering the discussion about estimators or statistical theory).
+
+Let's plot the two variables we created
+
+```{r, echo=T}
+
+plot(df$col.one, df$col.two)
+
+```
+
+Now let's try and estimate the relationship using OLS regression. What do you think? Can we fit a line in the above scatterplot?
+
+
+
+Let's plot the two variables we created
+
+```{r, echo=T}
+
+first.ols<-lm(df$col.two~df$col.one)
+summary(first.ols)
+
+
+#Note that you might also see this written as follows
+
+first.ols.alt<-lm(col.two~col.one, data=df)
+summary(first.ols.alt)
+```
+
+So here is your first OLS model. It does not make a lot of sense when you look at the results, but it generally shouldn't as it is a small number of random numbers. BUt what you should learn from this is the general infrastructure of the code.
+
+1. We store our model in an object that contains the command
+2. The command tells R which estimator to use (lm in our case stands for linear model)
+3. The DV variable is placed on the left hand side and the independent variable is placed on the right hand side. The two variables are connected by **~**.
+
+If you have additional independent variables you add it with a plus sign. Say for example that I have a third column (or variable).
+
+```{r, echo=T}
+
+col.three<- c(5,9,21, 5,22)
+
+#connect it to the original data.frame
+df= cbind(df, col.three)
+
+#Check everything has worked
+df
+
+#Estimate
+
+first.ols<-lm(df$col.one~df$col.two+ df$col.three)
+summary(first.ols)
+```
+
+## Packages 
+
+One of the key features of R is that it is based on user written packages. These packages need to be installed and loaded. You should install these packages once, but then load them every time you revisit your project. Let's do a very basic example of how this works.In your own machines don't add the # key before the command! 
+
+```{r, echo=T}
+#The following installs ggplot2 which is a prominent plotting package
+#install.packages("ggplot2")
+#Once it is installed, you load it in the following way:
+library(ggplot2)
+
+```
+
+Once a package is loaded you can use it. R comes with a help function (help(ggplot2)), though most of the help will come from searching the web. Try to install and load a different package called swirl.
+
+
+```{r swirl, exercise=TRUE}
+
+
+```
+```{r swirl-solution}
+install.packages("swirl")
+library(swirl)
+```
+
+*swirl* can in fact be a very useful resource for learning! Check it out when you get the time! But since we opened the *ggplot2* door it would be nice to see what it does.
+
+```{r ,echo=T}
+ggplot(df, aes(x=col.one, y=col.two)) + 
+  geom_point()+
+  geom_smooth(method=lm)
+```
+You could elaborate on the basic ggplot plot
+
+```{r ,echo=T}
+ggplot(df, aes(x=col.one, y=col.two)) + 
+  geom_point()+
+  geom_smooth(method=lm, col="red")+ ylab("Y")+ xlab("X")+theme_bw()
+```
+
+
+## Loading data
+
+So far we have assumed that you create the data yourself. Often times this is not the case. Say or example that you want to load a dataset that is stored in your personal computer. I think it is good practice to set the working directory
+
+*setwd(/users/etcetc)* is the basic command to do this. If you find this difficult you can always click on Session>Set Working Directory and then set the directory manually. It is good practice to copy and paste what appear in the console to your syntax.
+
+Once you have done this, you need to figure out what type of data you will be importing in RStudio. You have a number of options here and perhaps the most convenient way is to File>Import Dataset and follow the instructions. As always try to copy and paste the code to your script so that you can quickly run the code the next time you are working on the project. 
+
+Let's do a quick example here with a .csv file
+
+The command to open a .csv file that is stored in your working directory is *read.csv("name_of_file.csv")*. Note that you could have the full extension there and avoid the *setwd* route. But, again, in your first R sessions using the interface is probably the best decision.
+
+## Quiz
+
+Just to have a bit fof fun andd make sure you have understood the basics of R, here is a -very- easy quiz for you.
+
+```{r quiz}
+quiz(
+  question("Say one wants to get the median value of col.one. Which of the following is the correct command?",
+    answer("summary(col.one)"),
+    answer("mean(df$col.one"),
+    answer("summary(df$col.one)", correct = TRUE),
+    answer("sd(col.one)")
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("ggplot", correct = TRUE),
+    answer("tools"),
+    answer("stats")
+  ),
+  question("Which of the following get the 4th observation of col.three",
+    answer("df[4,3]", correct = TRUE),
+    answer("df[3,4]"),
+    answer("df$col.three[3]", correct= TRUE)
+  )
+)
+```
+
